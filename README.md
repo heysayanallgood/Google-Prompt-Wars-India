@@ -1,6 +1,8 @@
 # Google-Prompt-Wars-India
 Decentralized, E2EE-Encrypted Orchestration for Next-Gen Sporting Venues
+
 [https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnVtN3Q3YXh4a2dtZXcyYnA4cDBvMm13YzRwbjE5cmc4bmRmaXJsZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/1IkLLcZNrDD5w5Uqhi/giphy.gif]
+
 🏟️ AuraVOS: The Future of Venue Intelligence
 Decentralized | E2EE-Encrypted | Real-Time Orchestration
 🚀 The Vision
