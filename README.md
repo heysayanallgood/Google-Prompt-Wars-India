@@ -10,6 +10,8 @@ AuraVOS is a high-performance orchestration layer designed for the world's large
 
 "We don't just manage crowds; we orchestrate experiences."
 
+![Cyber Security Grid](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExanFraGhlamlwd243dnU1cjFvbHkzdWJxYWV5N2Zyc2w1MnUzNXA2cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/lo5HLcAPFSgTZNTpAn/giphy.gif)
+
 ✨ Key Features
 Feature,Description,Tech
 🛡️ E2EE Identity,Zero-Knowledge Proofs (ZKP) ensure attendee privacy.,Signal Protocol
