@@ -59,8 +59,7 @@ It transforms chaotic crowd movement into a **synchronized, encrypted data strea
 
 ## 🧠 Experience Layer  
 
-![AR Experience](https://tenor.com/8SpQ.gif)
-
+![AR Experience](https://media.tenor.com/8SpQ.gif)
 ---
 
 ## 🔐 Security Manifest  
@@ -75,7 +74,7 @@ AuraVOS follows a **Zero-Trust Model**:
 
 ## 🌐 System Energy  
 
-![Energy](https://tenor.com/eeJn9dH6y1P.gif)
+![Energy](https://media.tenor.com/eeJn9dH6y1P.gif)
 
 ---
 
