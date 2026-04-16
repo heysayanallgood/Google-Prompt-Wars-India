@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Precision Orchestration. Absolute Privacy.</title>
+
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- CSS Links -->
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/index.css">
+</head>
+
+<body>
+
+    <!-- Background Cinematic Orbs -->
+    <div class="global-bg-fx">
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb violet"></div>
+        <div class="glow-orb orange"></div>
+    </div>
+
+    <!-- Floating Top Navigation -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>VOS</span></div>
+            <div class="nav-links">
+                <a href="index.html" class="active">Home</a>
+                <a href="technology.html">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html">Case Studies</a>
+                <a href="backend-console.html">Developer API</a>
+                <a href="biometric-scan.html">Biometric Kiosk</a>
+                <a href="contestant-registry.html">Contestant Registry</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta" style="background: transparent;">Login</a>
+                <button class="nav-cta">Request Demo</button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Strict Grid Page Container -->
+    <main class="page-container">
+
+        <!-- Hero Section with WebGL Canvas Underlay -->
+        <section class="hero-section">
+
+            <!-- Dedicated WebGL Canvas (Z-Index 0) -->
+            <canvas id="hero-gl-canvas"></canvas>
+
+            <div class="hero-content">
+                <div class="hero-badge slide-up">
+                    <span class="badge-dot"></span>
+                    E2EE-Encrypted Venue Operating System
+                </div>
+                <h1 class="hero-title slide-up-delay-1">
+                    Precision Orchestration.<br>
+                    <span class="text-gradient">Absolute Privacy.</span>
+                </h1>
+                <p class="hero-subtitle slide-up-delay-2">
+                    The end-to-end encrypted operating system for next-generation stadiums. Zero-knowledge identity.
+                    Edge computing orchestration.
+                </p>
+                <!-- Z-Index fixed buttons -->
+                <div class="hero-actions slide-up-delay-3">
+                    <button class="primary-btn">Deploy AuraVOS</button>
+                    <button class="secondary-btn">Read the Whitepaper</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Proof / Trust Bar -->
+        <section class="trust-bar-section">
+            <div class="trust-glass panel">
+                <p class="trust-label">Powered by Next-Gen Tech</p>
+                <div class="trust-logos">
+                    <div class="tech-badge"><span>🦀</span> Rust</div>
+                    <div class="tech-badge"><span>⚡</span> WebAssembly</div>
+                    <div class="tech-badge"><span>🛡️</span> Signal Protocol</div>
+                    <div class="tech-badge"><span>🔐</span> Zero-Knowledge Proofs</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="global-footer">
+        <div class="footer-cta">
+            <h2>Deploy AuraVOS to your venue.</h2>
+            <button class="footer-btn">Request a Consultation</button>
+        </div>
+
+        <div class="footer-links">
+            <a href="#">Security Audits</a>
+            <a href="#">Documentation</a>
+            <a href="#">API Reference</a>
+            <a href="#">Carrier Network</a>
+        </div>
+
+        <div class="footer-bottom">
+            <span>© 2026 AuraVOS Systems Inc. All rights reserved.</span>
+            <div class="footer-legal">
+                <a href="#">Privacy Policy (E2EE)</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">GitHub Repo</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js" defer></script>
+</body>
+
+</html>

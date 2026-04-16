@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS Technology | Deep Tech Deep-Dive</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/technology.css">
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="global-bg-fx">
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb violet"></div>
+        <div class="glow-orb orange"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>VOS</span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="technology.html" class="active">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html">Case Studies</a>
+                <a href="backend-console.html">Developer API</a>
+                <a href="biometric-scan.html">Biometric Kiosk</a>
+                <a href="contestant-registry.html">Contestant Registry</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta" style="background: transparent;">Login</a>
+                <button class="nav-cta">Request Demo</button>
+            </div>
+        </nav>
+    </div>
+
+    <main class="page-container tech-page">
+        <header class="tech-header">
+            <h1 class="tech-title slide-up">The Architecture of Privacy</h1>
+            <p class="tech-subtitle slide-up-delay-1">Cryptographic certainty applied to physical venues. Explore the engine powering AuraVOS.</p>
+        </header>
+
+        <!-- Bento Box Grid -->
+        <section class="bento-grid">
+            
+            <!-- Card 1: Zero-Knowledge Identity (WebGL Lock) -->
+            <div class="bento-card identity-card">
+                <div class="bento-content">
+                    <div class="card-header">
+                        <h3>Zero-Knowledge Identity</h3>
+                        <div class="status-badge"><span class="dot"></span> E2EE Active</div>
+                    </div>
+                    <p>Biometrics ensuring anonymity. Validation occurs on-device; the venue only receives a cryptographic proof of entry. No central honeypot exists.</p>
+                </div>
+                <!-- 3D Canvas Box -->
+                <div class="canvas-container" style="flex: 1; min-height: 250px; position: relative; display: flex; justify-content: center; align-items: center;">
+                    <canvas id="lock-gl-canvas"></canvas>
+                    <div class="hud-overlay" style="position: absolute; bottom: 10px; left: 10px; font-family: var(--font-mono); font-size: 0.65rem; color: var(--accent-cyan); opacity: 0.6; padding: 1rem;">
+                        > ZKP_VERIFIED<br>> SHACKLE_SECURE
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Edge Node Processing (Advanced SVG Flow) -->
+            <div class="bento-card edge-card">
+                <div class="bento-content">
+                    <div class="card-header">
+                        <h3>Edge Node Processing</h3>
+                        <div class="status-badge pulse-purple"><span class="dot"></span> Latency &lt; 10ms</div>
+                    </div>
+                    <p>Latency reduction through localized mesh networking. Data never hits a central server unnecessarily.</p>
+                </div>
+                <div class="advanced-chart-container" style="margin: 0 2rem 2rem 2rem;">
+                    <div class="chart-y-axis">
+                        <span>100ms</span><span>50ms</span><span>10ms</span>
+                    </div>
+                    <div class="chart-wrapper">
+                        <!-- Grid overlay -->
+                        <div class="chart-grid"></div>
+                        <svg class="edge-chart" viewBox="0 0 500 150">
+                            <!-- Legacy Line -->
+                            <path d="M0,50 Q100,60 200,40 T400,80 T500,50" class="legacy-line"/>
+                            <text x="450" y="45" fill="rgba(255,255,255,0.3)" font-size="10">Legacy Cloud</text>
+                            
+                            <!-- Edge Node Line -->
+                            <path d="M0,130 Q150,140 250,120 T500,135" class="aura-line"/>
+                            
+                            <!-- Glowing Data Packets -->
+                            <circle r="4" class="data-packet p1">
+                                <animateMotion dur="3s" repeatCount="indefinite" path="M0,130 Q150,140 250,120 T500,135"/>
+                            </circle>
+                            <circle r="4" class="data-packet p2">
+                                <animateMotion dur="3s" begin="1.5s" repeatCount="indefinite" path="M0,130 Q150,140 250,120 T500,135"/>
+                            </circle>
+                        </svg>
+                        <div class="scanner-line"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Ghost Queueing Simulation -->
+            <div class="bento-card queue-card span-2">
+                <div class="bento-content" style="max-width: 400px; z-index: 10;">
+                    <div class="card-header">
+                        <h3>Ghost Queueing Simulation</h3>
+                        <div class="status-badge pulse-orange"><span class="dot"></span> Predictive Route</div>
+                    </div>
+                    <p>Predictive spatial routing. The system dynamically reroutes traffic before bottlenecks physically manifest.</p>
+                </div>
+                <div class="sim-container" style="margin: 0 2em 2em 2em;">
+                    <!-- Complex flow grid -->
+                    <div class="flow-field"></div>
+                    <!-- The specific bottleneck zone -->
+                    <div class="bottleneck-zone">
+                        <div class="red-pulse"></div>
+                        <span style="position:absolute; bottom: -20px; font-size: 0.6rem; color: #ff3333; width: 100px; text-align:center; left:-25px;">Sector 7 Alert</span>
+                    </div>
+                    
+                    <!-- Dynamic generated particles flowing around -->
+                    <div id="particle-swarm"></div>
+
+                    <svg class="queue-sim" viewBox="0 0 800 200">
+                        <path id="safe-path-1" d="M 0 100 Q 200 100, 400 30 T 800 100" fill="none" class="ghost-path"/>
+                        <path id="safe-path-2" d="M 0 100 Q 200 100, 400 170 T 800 100" fill="none" class="ghost-path"/>
+                        
+                        <!-- Main leading nodes -->
+                        <circle cx="0" cy="0" r="5" class="ghost-node orange">
+                            <animateMotion dur="4s" repeatCount="indefinite">
+                                <mpath href="#safe-path-1"/>
+                            </animateMotion>
+                        </circle>
+                        <circle cx="0" cy="0" r="5" class="ghost-node cyan">
+                            <animateMotion dur="4.2s" begin="1s" repeatCount="indefinite">
+                                <mpath href="#safe-path-2"/>
+                            </animateMotion>
+                        </circle>
+                    </svg>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="global-footer">
+        <div class="footer-cta">
+            <h2>Start your integration.</h2>
+            <button class="footer-btn">Read the Docs</button>
+        </div>
+        <div class="footer-links">
+            <a href="#">Whitepapers</a>
+            <a href="#">Research Hub</a>
+            <a href="#">Careers</a>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 AuraVOS Systems Inc.</span>
+            <div class="footer-legal">
+                <a href="#">Privacy Protocol</a>
+                <a href="#">Terms</a>
+                <a href="#">GitHub Repo</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js" defer></script>
+    <script>
+        // Swarm logic for Ghost Queueing
+        document.addEventListener('DOMContentLoaded', () => {
+            const swarm = document.getElementById('particle-swarm');
+            if(swarm) {
+                for(let i=0; i<30; i++) {
+                    const p = document.createElement('div');
+                    p.className = 'swarm-particle';
+                    // Randomize start pos and animation delay
+                    p.style.top = Math.random() * 100 + '%';
+                    p.style.animationDelay = (Math.random() * -5) + 's';
+                    p.style.animationDuration = (4 + Math.random() * 3) + 's';
+                    swarm.appendChild(p);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

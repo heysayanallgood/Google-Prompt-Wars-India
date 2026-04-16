@@ -1,0 +1,224 @@
+/* technology.css */
+
+.tech-page {
+    padding-top: 140px;
+    padding-bottom: 6rem;
+}
+
+.tech-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.tech-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #FFF, var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tech-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Strict Bento Box Grid */
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.bento-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: var(--glass-blur); /* Strict 24px from global */
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--glass-shadow);
+}
+
+.bento-content {
+    padding: 2.5rem;
+    z-index: 10;
+    pointer-events: none; /* Let clicks pass to canvases if needed */
+}
+
+.bento-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.bento-content p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* Strict Flexbox centering for visual areas */
+.bento-visual {
+    flex: 1;
+    min-height: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+    width: 100%;
+}
+
+/* Card 1: Identity */
+.canvas-container {
+    background: radial-gradient(circle at top, rgba(138,43,226,0.1), transparent 70%);
+}
+
+/* Card 1: Identity */
+#lock-gl-canvas {
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+    cursor: grab;
+}
+#lock-gl-canvas:active { cursor: grabbing; }
+
+/* Card 2: Edge Node Network */
+.advanced-chart-container {
+    padding: 1rem; flex: 1; display: flex; align-items: stretch; gap: 1rem; position: relative;
+    background: rgba(0,0,0,0.4); border-radius: 8px; border: 1px solid rgba(255,255,255,0.05);
+}
+.chart-y-axis {
+    display: flex; flex-direction: column; justify-content: space-between; font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono); height: 150px;
+}
+.chart-wrapper {
+    flex: 1; position: relative; overflow: hidden; height: 150px;
+}
+.chart-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+.scanner-line {
+    position: absolute; top: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, transparent, var(--accent-violet), transparent);
+    box-shadow: 0 0 15px var(--accent-violet);
+    animation: scanChart 4s linear infinite;
+}
+@keyframes scanChart { 0% { left: 0%; } 100% { left: 100%; } }
+
+.edge-chart {
+    width: 100%; height: 100%; position: relative; z-index: 2;
+}
+.legacy-line {
+    fill: none; stroke: rgba(255,255,255,0.2); stroke-width: 2; stroke-dasharray: 4 4;
+}
+.aura-line {
+    fill: none; stroke: var(--accent-violet); stroke-width: 3;
+    filter: drop-shadow(0 0 8px var(--accent-violet));
+}
+.data-packet { fill: #fff; filter: drop-shadow(0 0 5px #fff); }
+
+/* Card 3: Queue Sim */
+.sim-container {
+    position: relative; width: 100%; height: 250px; overflow: hidden; background: #030303; border-radius: 8px; border: 1px solid rgba(0,240,255,0.1);
+}
+.flow-field {
+    position: absolute; inset: 0; background: radial-gradient(circle at center, transparent 30%, #000 70%), url('data:image/svg+xml;utf8,<svg width="20" height="20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+}
+.bottleneck-zone {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; border-radius: 50%;
+    border: 1px dashed red; background: rgba(255,0,0,0.1); display: flex; justify-content: center; align-items: center; z-index: 5;
+}
+.red-pulse {
+    width: 20px; height: 20px; background: red; border-radius: 50%; box-shadow: 0 0 20px red; animation: panicPulse 1s infinite;
+}
+@keyframes panicPulse { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(3); opacity: 0; } }
+
+.ghost-path { stroke: rgba(0,240,255,0.15); stroke-width: 2; stroke-dasharray: 4 6; }
+.ghost-node { filter: drop-shadow(0 0 10px currentColor); }
+.ghost-node.cyan { fill: var(--accent-cyan); color: var(--accent-cyan); }
+.ghost-node.orange { fill: var(--accent-orange); color: var(--accent-orange); }
+
+.queue-sim { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 10; }
+
+/* Swarm logic */
+#particle-swarm { position: absolute; inset: 0; z-index: 2; }
+.swarm-particle {
+    position: absolute; left: -10px; width: 3px; height: 3px; border-radius: 50%; background: var(--accent-cyan); opacity: 0.5;
+    animation-name: swarmFlow; animation-timing-function: linear; animation-iteration-count: infinite;
+}
+@keyframes swarmFlow {
+    0% { transform: translateX(0) translateY(0); }
+    40% { transform: translateX(350px) translateY(-50px); opacity: 1; background: var(--accent-violet); }
+    60% { transform: translateX(450px) translateY(-50px); opacity: 1; }
+    100% { transform: translateX(850px) translateY(0); opacity: 0; }
+}
+
+/* Visual: Line Chart (Legacy, removed) */
+
+/* Visual: Ghost Queuing */
+.span-2 {
+    grid-column: span 2;
+    flex-direction: row;
+    min-height: 350px;
+}
+
+@media (max-width: 800px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+    }
+    .span-2 {
+        grid-column: span 1;
+        flex-direction: column;
+    }
+}
+
+.queue-card .bento-content {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.horizon-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.queue-board {
+    width: 100%;
+    height: 100%;
+}
+
+.bottleneck-zone {
+    fill: rgba(255, 94, 0, 0.1);
+    stroke: var(--accent-orange);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+    animation: rotateWireframe 10s linear infinite;
+    transform-origin: 500px 100px;
+}
+
+.bottleneck-label {
+    fill: var(--accent-orange);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-anchor: middle;
+    alignment-baseline: middle;
+}
+
+.ghost-dot {
+    filter: drop-shadow(0 0 6px currentColor);
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Node Telemetry</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <style>
+        .cyberpunk-theme { border-color: rgba(255, 94, 0, 0.4); }
+        .cyberpunk-header h2 { color: var(--accent-orange); text-shadow: 0 0 10px rgba(255, 94, 0, 0.5); }
+        .gl-container { 
+            flex: 1; min-height: 600px; position: relative; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255, 94, 0, 0.3); background: rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 50px rgba(255, 94, 0, 0.05);
+        }
+        /* Cyberpunk Scanlines */
+        .gl-container::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 94, 0, 0.03) 51%);
+            background-size: 100% 4px;
+        }
+        .gl-canvas { width: 100% !important; height: 100% !important; display: block; outline: none; cursor: crosshair; }
+        .glass-nav-container, .global-footer { display: none !important; }
+
+        /* Advanced HUD Styling */
+        .advanced-hud {
+            position: absolute; pointer-events: none; font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-secondary); z-index: 20; display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .hud-top-right { top: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-bottom-right { bottom: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-top-left { top: 2rem; left: 2rem; align-items: flex-start; }
+        
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 94, 0, 0.4);
+            padding: 1rem; border-radius: 8px; backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.1); width: 220px;
+        }
+        .hud-panel-title { color: var(--accent-orange); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,94,0,0.2); padding-bottom: 0.25rem; }
+        
+        /* Metric rows */
+        .metric-row { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.75rem; }
+        .metric-val { color: var(--text-primary); font-weight: bold; }
+        .metric-val.alert { color: var(--accent-orange); animation: pulseText 2s infinite; }
+
+        @keyframes pulseText { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    </style>
+</head>
+<body class="dashboard-body">
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb orange" style="width:60vw; height:60vw; top:10%; left:20%; filter:blur(150px); opacity:0.15"></div>
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="dash-sidebar" style="border-right-color: rgba(255, 94, 0, 0.3);">
+            <div class="sidebar-logo">
+                Aura<span style="color:var(--accent-orange)">VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html"><span class="icon">◎</span> Heatmaps</a>
+                <a href="node-telemetry.html" class="active" style="color:var(--accent-orange); background:rgba(255,94,0,0.1); border-color:rgba(255,94,0,0.3); box-shadow:0 0 15px rgba(255,94,0,0.15);"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <!-- Fluid Main Content Area -->
+        <main class="dash-main cyberpunk-theme">
+            <header class="dash-topbar cyberpunk-header">
+                <div class="topbar-info">
+                    <h2>Node Array Connectivity</h2>
+                    <span class="live-badge" style="border-color:var(--accent-orange); color:var(--accent-orange); background:rgba(255,94,0,0.05);"><span class="pulse-dot" style="background:var(--accent-orange)"></span> PACKET SNIFFING</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="connection-status" style="color:var(--accent-orange); border-color:rgba(255,94,0,0.3);">
+                        <span class="status-icon">▤</span> ZKP ACTIVE
+                    </div>
+                </div>
+            </header>
+
+            <div class="gl-container">
+                <canvas id="telemetry-gl-canvas" class="gl-canvas"></canvas>
+                
+                <!-- Expanded Advanced HUD Overlays -->
+                <div class="advanced-hud hud-top-left">
+                    <div class="map-hud" style="border-color:rgba(255,94,0,0.3); background:rgba(0,0,0,0.6); position: relative; top: 0; left: 0;">
+                        <div class="hud-item title" style="color:var(--text-primary);">Network Constellation</div>
+                        <div class="hud-item detail" style="color:var(--accent-orange);">Uplink: <span id="uplink-val">1.2</span> TB/s</div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-top-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Packet Routing Info</div>
+                        <div class="metric-row"><span>Active Tunnels</span><span class="metric-val">1,402</span></div>
+                        <div class="metric-row"><span>Packet Loss</span><span class="metric-val">0.001%</span></div>
+                        <div class="metric-row"><span>Encryption</span><span class="metric-val">AES-256</span></div>
+                        <div class="metric-row"><span>Status</span><span class="metric-val alert">OPTIMAL</span></div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-bottom-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Active Node Log</div>
+                        <div id="live-log" style="font-size: 0.6rem; color: var(--accent-orange); opacity: 0.8; height: 60px; overflow: hidden; display: flex; flex-direction: column-reverse;">
+                            <div>> INIT PKT_SNIFF... DONE</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abstract Reticle Overlay -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0.4; z-index: 10;">
+                    <svg width="300" height="300" viewBox="0 0 300 300" stroke="var(--accent-orange)" fill="none">
+                        <circle cx="150" cy="150" r="140" stroke-width="1" stroke-dasharray="4 8" opacity="0.3"/>
+                        <circle cx="150" cy="150" r="100" stroke-width="0.5" stroke-dasharray="1 4" opacity="0.5"/>
+                        <path d="M150 0 v20 M150 300 v-20 M0 150 h20 M300 150 h-20" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Uplink simulation
+            const uplink = document.getElementById('uplink-val');
+            setInterval(() => {
+                const j = (Math.random() * 0.4 - 0.2).toFixed(2);
+                uplink.innerText = (1.2 + parseFloat(j)).toFixed(2);
+            }, 1000);
+
+            // Log simulation
+            const logTerm = document.getElementById('live-log');
+            const msgs = [
+                "> NODE_0x45A: SECURE",
+                "> REROUTING TUNNEL B...",
+                "> ZKP VALIDATION OK",
+                "> NEW PEER DETECTED",
+                "> SYNCING LEDGER..."
+            ];
+            setInterval(() => {
+                const msg = document.createElement('div');
+                msg.innerText = msgs[Math.floor(Math.random() * msgs.length)];
+                logTerm.prepend(msg);
+                if(logTerm.children.length > 5) logTerm.lastChild.remove();
+            }, 1500);
+        });
+    </script>
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

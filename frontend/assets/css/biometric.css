@@ -1,0 +1,251 @@
+/* biometric.css */
+
+.kiosk-mode {
+    background-color: #000;
+    overflow: hidden;
+    margin: 0; padding: 0;
+}
+
+.kiosk-nav {
+    position: absolute;
+    top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.kiosk-container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Video Underlay */
+.video-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background: #050505;
+    overflow: hidden;
+}
+
+#webcam-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: contrast(1.1) saturate(1.2) grayscale(0.2); /* Cinematic grading */
+}
+
+/* Pre-Scan Camera Prompt */
+.camera-prompt {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.9);
+    z-index: 50;
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+    text-align: center;
+}
+.camera-prompt h2 { margin-top: 1rem; letter-spacing: 2px; }
+.camera-prompt p { color: #888; font-size: 0.8rem; margin-top: 0.5rem; }
+
+.spinner {
+    width: 50px; height: 50px;
+    border: 3px solid rgba(0,240,255,0.2);
+    border-top-color: var(--accent-cyan);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Scanner HUD Overlay */
+.scanner-hud {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none; /* Let clicks pass if needed */
+    box-shadow: inset 0 0 100px rgba(0,240,255,0.2);
+}
+
+/* Targeting Brackets */
+.hud-bracket {
+    position: absolute;
+    width: 80px; height: 80px;
+    border: 4px solid var(--accent-cyan);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0.6;
+}
+.hud-bracket.top-left { top: 10%; left: 10%; border-right: none; border-bottom: none; }
+.hud-bracket.top-right { top: 10%; right: 10%; border-left: none; border-bottom: none; }
+.hud-bracket.bottom-left { bottom: 10%; left: 10%; border-right: none; border-top: none; }
+.hud-bracket.bottom-right { bottom: 10%; right: 10%; border-left: none; border-top: none; }
+
+/* Animate Brackets snapping to face */
+.scanner-hud.scanning .hud-bracket.top-left { top: 30%; left: 35%; }
+.scanner-hud.scanning .hud-bracket.top-right { top: 30%; right: 35%; }
+.scanner-hud.scanning .hud-bracket.bottom-left { bottom: 30%; left: 35%; }
+.scanner-hud.scanning .hud-bracket.bottom-right { bottom: 30%; right: 35%; }
+.scanner-hud.scanning .hud-bracket { border-color: var(--accent-orange); opacity: 1; }
+
+.scanner-hud.verified .hud-bracket { border-color: #00ffaa; opacity: 1; width: 120px; height: 120px; }
+
+/* Center Crosshair */
+.center-crosshair {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px; height: 200px;
+    opacity: 0.3;
+    transition: opacity 0.5s ease;
+}
+.ch-circle { fill: none; stroke: var(--accent-cyan); stroke-width: 1; stroke-dasharray: 4 6; animation: spinRev 10s linear infinite; transform-origin: center; }
+.ch-line { stroke: var(--accent-cyan); stroke-width: 0.5; }
+@keyframes spinRev { to { transform: rotate(-360deg); } }
+
+.scanner-hud.scanning .center-crosshair { opacity: 0.8; }
+.scanner-hud.scanning .ch-circle { stroke: var(--accent-orange); animation-duration: 2s; }
+.scanner-hud.verified .center-crosshair { opacity: 0; }
+
+/* Sweeping Laser */
+.laser-sweep {
+    position: absolute;
+    top: 30%; left: 35%; right: 35%; height: 3px;
+    background: var(--accent-orange);
+    box-shadow: 0 0 20px 5px rgba(255,94,0,0.5);
+    opacity: 0;
+    z-index: 30;
+}
+.scanner-hud.scanning .laser-sweep {
+    animation: sweep 2s ease-in-out infinite alternate;
+    opacity: 1;
+}
+@keyframes sweep {
+    0% { top: 30%; }
+    100% { top: 70%; }
+}
+
+/* Dots (AI Plotting Simulation generated via JS) */
+.topo-dots {
+    position: absolute; inset: 0; z-index: 25;
+}
+.topo-dot {
+    position: absolute; width: 4px; height: 4px; background: var(--accent-cyan); border-radius: 50%;
+    opacity: 0;
+}
+
+/* Console Text Status */
+.hud-console {
+    position: absolute;
+    bottom: 40px; left: 40px;
+    font-family: var(--font-mono);
+    color: var(--accent-cyan);
+    background: rgba(0,0,0,0.6);
+    padding: 1.5rem;
+    border-left: 3px solid var(--accent-cyan);
+    backdrop-filter: blur(5px);
+}
+.console-header { font-size: 0.7rem; color: #888; margin-bottom: 0.5rem; letter-spacing: 1px; }
+.status-msg { font-size: 1.5rem; font-weight: 700; text-transform: uppercase; margin-bottom: 1rem; }
+.telemetry { display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.8rem; }
+
+.scanner-hud.scanning .status-msg { color: var(--accent-orange); }
+.scanner-hud.scanning .hud-console { border-left-color: var(--accent-orange); }
+
+.scanner-hud.verified .status-msg { color: #00ffaa; }
+.scanner-hud.verified .hud-console { border-left-color: #00ffaa; color: #00ffaa; }
+
+/* Final Verdict Badge */
+.verification-badge {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: rgba(0, 255, 170, 0.1);
+    border: 2px solid #00ffaa;
+    padding: 2rem 4rem;
+    text-align: center;
+    border-radius: 12px;
+    backdrop-filter: blur(15px);
+    box-shadow: 0 0 50px rgba(0, 255, 170, 0.3);
+    pointer-events: all;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.scanner-hud.verified .verification-badge {
+    opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1);
+}
+.flash-text { color: #00ffaa; font-family: var(--font-mono); font-size: 2.5rem; margin-bottom: 1rem; text-shadow: 0 0 20px #00ffaa; animation: flicker 0.1s 3; }
+.auth-details p { color: #fff; font-family: var(--font-mono); font-size: 1rem; margin: 0.5rem 0; text-transform: uppercase; }
+
+@keyframes flicker { 0% { opacity: 0; } 50% { opacity: 1; } }
+
+/* Footer */
+.kiosk-footer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    text-align: center; padding: 1rem;
+    background: rgba(0,0,0,0.8);
+    font-family: var(--font-mono); font-size: 0.7rem; color: #666;
+    z-index: 100;
+}
+/* Append to assets/css/biometric.css */
+
+/* Post-Scan Prompt */
+.prompt-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 60;
+    background: rgba(0,0,0,0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(15px);
+}
+
+.prompt-box {
+    background: rgba(0, 240, 255, 0.05);
+    border: 2px solid var(--accent-cyan);
+    padding: 3rem;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.2);
+    font-family: var(--font-mono);
+}
+
+.prompt-box h2 {
+    color: var(--accent-cyan);
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+.prompt-box p {
+    color: #dedede;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
+#username-input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.2rem;
+    font-family: var(--font-mono);
+    color: #fff;
+    background: rgba(0,0,0,0.5);
+    border: 1px solid var(--accent-cyan);
+    border-radius: 6px;
+    text-align: center;
+    outline: none;
+    margin-bottom: 1.5rem;
+}
+
+#username-input:focus {
+    box-shadow: 0 0 15px var(--accent-cyan) inset;
+}
+
+.mt-2 { margin-top: 1rem; }
+

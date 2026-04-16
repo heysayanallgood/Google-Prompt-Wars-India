@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | System Alerts</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <style>
+        .cyberpunk-theme { border-color: rgba(255, 94, 0, 0.4); }
+        .cyberpunk-header h2 { color: var(--accent-orange); text-shadow: 0 0 10px rgba(255, 94, 0, 0.5); }
+        .gl-container { 
+            flex: 1; min-height: 600px; position: relative; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255, 94, 0, 0.3); background: rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 50px rgba(255, 94, 0, 0.05);
+        }
+        /* Cyberpunk Scanlines */
+        .gl-container::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 0, 0, 0.03) 51%);
+            background-size: 100% 4px;
+        }
+        .gl-canvas { width: 100% !important; height: 100% !important; display: block; outline: none; cursor: crosshair; }
+        .glass-nav-container, .global-footer { display: none !important; }
+
+        /* Advanced HUD Styling */
+        .advanced-hud {
+            position: absolute; pointer-events: none; font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-secondary); z-index: 20; display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .hud-top-right { top: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-bottom-right { bottom: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-top-left { top: 2rem; left: 2rem; align-items: flex-start; }
+        
+        .hud-panel {
+            background: rgba(15, 0, 0, 0.7); border: 1px solid rgba(255, 50, 0, 0.4);
+            padding: 1rem; border-radius: 8px; backdrop-filter: blur(8px);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.15); width: 240px;
+        }
+        .hud-panel-title { color: #ff3333; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,0,0,0.2); padding-bottom: 0.25rem; }
+        
+        /* Metric rows */
+        .metric-row { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.75rem; }
+        .metric-val { color: var(--text-primary); font-weight: bold; }
+        .metric-val.critical { color: #ff3333; animation: pulseText 1s infinite; }
+
+        @keyframes pulseText { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+
+        /* Threat Log */
+        .threat-item { font-size: 0.65rem; margin-bottom: 0.3rem; border-left: 2px solid #ff3333; padding-left: 0.5rem; }
+        .threat-item span { color: #ff3333; }
+
+    </style>
+</head>
+<body class="dashboard-body">
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb orange" style="width:60vw; height:60vw; top:10%; left:20%; filter:blur(150px); opacity:0.15"></div>
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="dash-sidebar" style="border-right-color: rgba(255, 94, 0, 0.3);">
+            <div class="sidebar-logo">
+                Aura<span style="color:var(--accent-orange)">VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html"><span class="icon">◎</span> Heatmaps</a>
+                <a href="node-telemetry.html"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html" class="active" style="color:var(--accent-orange); background:rgba(255,94,0,0.1); border-color:rgba(255,94,0,0.3); box-shadow:0 0 15px rgba(255,94,0,0.15);"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <main class="dash-main cyberpunk-theme">
+            <header class="dash-topbar cyberpunk-header">
+                <div class="topbar-info">
+                    <h2>Predictive Threat Detection</h2>
+                    <span class="live-badge" style="border-color:var(--accent-orange); color:var(--accent-orange); background:rgba(255,94,0,0.05);"><span class="pulse-dot" style="background:var(--accent-orange)"></span> HAZARD BEACON LIVE</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="connection-status" style="color:var(--accent-orange); border-color:rgba(255,94,0,0.3);">
+                        <span class="status-icon">⚡</span> 1 WARNING
+                    </div>
+                </div>
+            </header>
+
+            <div class="gl-container">
+                <canvas id="alerts-gl-canvas" class="gl-canvas"></canvas>
+                
+                <!-- Advanced HUD -->
+                <div class="advanced-hud hud-top-left">
+                    <div class="map-hud" style="border-color:rgba(255,50,0,0.4); background:rgba(20,0,0,0.8); position: relative; top: 0; left: 0;">
+                        <div class="hud-item title" style="color:#ff3333;">Defcon Core</div>
+                        <div class="hud-item detail" style="color:var(--text-primary);">System: <span style="color:#ff3333; animation: pulseText 1.5s infinite">ELEVATED</span></div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-top-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Threat Assessment</div>
+                        <div class="metric-row"><span>Active Threats</span><span class="metric-val critical">03</span></div>
+                        <div class="metric-row"><span>Intercepted</span><span class="metric-val">12,041</span></div>
+                        <div class="metric-row"><span>Firewall Status</span><span class="metric-val">HOLDING</span></div>
+                        <div class="metric-row"><span>Risk Index</span><span class="metric-val">84.2%</span></div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-bottom-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Intrusion Log</div>
+                        <div id="threat-log" style="height: 100px; overflow: hidden; display: flex; flex-direction: column-reverse;">
+                            <div class="threat-item"><span>[WARN]</span> Unauthorized Ping - Sector 4</div>
+                            <div class="threat-item"><span>[WARN]</span> Port Scan Blocked - IP: 104.xxx</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Abstract Target Overlay -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0.6; z-index: 10;">
+                    <svg width="400" height="400" viewBox="0 0 400 400" stroke="#ff3333" fill="none">
+                        <circle cx="200" cy="200" r="190" stroke-width="1" stroke-dasharray="2 6" opacity="0.4"/>
+                        <path d="M200 0 v30 M200 400 v-30 M0 200 h30 M400 200 h-30" stroke-width="2"/>
+                        <circle cx="200" cy="200" r="10" stroke-width="1" />
+                        <line x1="190" y1="200" x2="210" y2="200" stroke-width="1"/>
+                        <line x1="200" y1="190" x2="200" y2="210" stroke-width="1"/>
+                    </svg>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logTerm = document.getElementById('threat-log');
+            const threats = [
+                "[CRIT] Buffer Overflow Attempt - Node 8",
+                "[WARN] DDoS Vector Detected - Null Routing",
+                "[INFO] SSL Handshake Failed",
+                "[WARN] Anomalous Payload - Sector 7",
+                "[INFO] Blacklisting IP 192.168.x.x"
+            ];
+            setInterval(() => {
+                const msg = document.createElement('div');
+                msg.className = 'threat-item';
+                msg.innerHTML = `<span>[sys_out]</span> ${threats[Math.floor(Math.random() * threats.length)]}`;
+                logTerm.prepend(msg);
+                if(logTerm.children.length > 4) logTerm.lastChild.remove();
+            }, 2500);
+        });
+    </script>
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

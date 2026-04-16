@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Organizer Control Panel</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    <link rel="stylesheet" href="./assets/css/organizer.css">
+</head>
+<body class="dashboard-body organizer-body">
+
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb orange"></div>
+        <div class="glow-orb red" id="emergency-glow" style="display: none; opacity: 0.5;"></div>
+    </div>
+
+    <!-- Lockdown Screen Overlay -->
+    <div class="lockdown-overlay"></div>
+
+    <!-- Layout Container -->
+    <div class="dashboard-layout">
+        
+        <!-- Fixed Sidebar (Strict 250px Layout) -->
+        <aside class="dash-sidebar">
+            <div class="sidebar-logo">
+                Aura<span>VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html" class="active"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html"><span class="icon">◎</span> Heatmaps</a>
+                <a href="case-studies.html"><span class="icon">▤</span> Case Studies</a>
+                <a href="node-telemetry.html"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <!-- Fluid Main Content Area -->
+        <main class="dash-main organizer-main">
+            <header class="dash-topbar organizer-header">
+                <div class="topbar-info">
+                    <h2>Mission Control Center</h2>
+                    <span class="live-badge"><span class="pulse-dot"></span> LIVE TELEMETRY</span>
+                </div>
+                <div class="topbar-actions">
+                    <button class="sys-btn emergency-btn" id="global-lockdown-btn">Global Lockdown</button>
+                </div>
+            </header>
+
+            <div class="organizer-grid">
+                
+                <!-- Left Column: Map & Dispatch -->
+                <div class="grid-col map-dispatch-col">
+                    
+                    <!-- SVG Spatial Map with Dropzones -->
+                    <div class="widget map-widget">
+                        <div class="widget-header">
+                            Venue Operational Map (Drag Staff to Deploy)
+                        </div>
+                        <div class="map-container droppable-map">
+                            <!-- Radar Sweep -->
+                            <div class="radar-sweep"></div>
+                            
+                            <!-- Drag over overlay -->
+                            <div class="map-grid-overlay"></div>
+                            
+                            <div class="drop-zone" data-zone="North Gate" style="top: 10%; left: 40%; width: 20%; height: 20%;">North Gate</div>
+                            <div class="drop-zone" data-zone="South Gate" style="bottom: 10%; left: 40%; width: 20%; height: 20%;">South Gate</div>
+                            <div class="drop-zone" data-zone="Concourse A" style="top: 35%; left: 10%; width: 30%; height: 30%;">Concourse A</div>
+                            <div class="drop-zone" data-zone="Concourse B" style="top: 35%; right: 10%; width: 30%; height: 30%;">Concourse B</div>
+                            <div class="drop-zone" data-zone="Food Court 1" style="top: 10%; right: 10%; width: 20%; height: 20%;">Food Court 1</div>
+                            <div class="drop-zone" data-zone="VIP Lounge" style="bottom: 10%; right: 10%; width: 20%; height: 20%;">VIP Lounge</div>
+
+                            <!-- Incident Markers Container -->
+                            <div id="incident-layer" class="incident-layer"></div>
+                        </div>
+                    </div>
+
+                    <!-- Rosters -->
+                    <div class="widget roster-widget">
+                        <div class="widget-header">Staff Roster (Drag to Dispatch)</div>
+                        <div class="roster-body" id="staff-roster">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Audit Trail Log -->
+                    <div class="widget audit-widget">
+                        <div class="widget-header">Live Audit Trail</div>
+                        <div class="widget-body" id="audit-trail-container">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: AI, Alerts, Trends -->
+                <div class="grid-col analytics-col">
+                    
+                    <!-- AI Recommendations -->
+                    <div class="widget ai-widget">
+                        <div class="widget-header ai-header"><span class="icon">🧠</span> AI Recommendations</div>
+                        <div class="widget-body" id="ai-recs-container">
+                            <div class="empty-state">No Active Recommendations</div>
+                        </div>
+                    </div>
+
+                    <!-- Critical Incidents -->
+                    <div class="widget incident-widget">
+                        <div class="widget-header incident-header"><span class="icon">🚨</span> Critical Incidents</div>
+                        <div class="widget-body" id="incident-container">
+                            <div class="empty-state">System Nomad. All Clear.</div>
+                        </div>
+                    </div>
+
+                    <!-- Chart.js Trend Analytics -->
+                    <div class="widget trend-widget">
+                        <div class="widget-header">Crowd Flow Velocity (Last 30m)</div>
+                        <div class="widget-body chart-container">
+                            <canvas id="flowChart"></canvas>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Override for global styling not needed here -->
+    <style>
+        .glass-nav-container { display: none !important; }
+        .global-footer { display: none !important; }
+    </style>
+
+    <script src="./assets/js/main.js" defer></script>
+    <script src="./assets/js/organizer.js" defer></script>
+</body>
+</html>

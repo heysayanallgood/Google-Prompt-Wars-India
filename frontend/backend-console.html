@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Developer API Console</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/backend.css">
+</head>
+<body class="backend-body">
+
+    <!-- Grid Matrix Background -->
+    <div class="matrix-grid-bg"></div>
+
+    <!-- Navigation -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav matrix-nav">
+            <div class="nav-logo matrix-logo">Aura<span>API</span></div>
+            <div class="nav-links matrix-links">
+                <a href="index.html">Home</a>
+                <a href="technology.html">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html">Case Studies</a>
+                <a href="backend-console.html" class="active">Developer API</a>
+                <a href="biometric-scan.html">Biometric Kiosk</a>
+                <a href="contestant-registry.html">Contestant Registry</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta matrix-cta" style="background: transparent;">Login</a>
+                <button class="nav-cta matrix-cta">Generate Keys</button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Backend Layout -->
+    <main class="backend-container">
+        
+        <!-- Left Panel: API Documentation -->
+        <aside class="api-docs-panel">
+            <header class="panel-header">
+                <h2>API Reference</h2>
+                <div class="status-indicator"><span class="pulse-dot green"></span> NODE STABLE</div>
+            </header>
+            <div class="docs-content">
+                
+                <div class="endpoint-block">
+                    <div class="endpoint-method post">POST</div>
+                    <div class="endpoint-url">/api/v1/auth/biometric</div>
+                    <p class="endpoint-desc">Validates E2EE facial scan against local edge node cache. Triggers turnstile unlocking mechanism.</p>
+                </div>
+
+                <div class="endpoint-block">
+                    <div class="endpoint-method get">GET</div>
+                    <div class="endpoint-url">/api/v1/crowd/density</div>
+                    <p class="endpoint-desc">Fetches real-time localized heatmaps. Params: ?sector=[str]</p>
+                </div>
+
+                <div class="endpoint-block">
+                    <div class="endpoint-method put">PUT</div>
+                    <div class="endpoint-url">/api/v1/concessions/stock</div>
+                    <p class="endpoint-desc">Updates point-of-sale inventory state globally. Generates dispatch alerts to fulfillment drones.</p>
+                </div>
+                
+                <div class="endpoint-block">
+                    <div class="endpoint-method wss">WSS</div>
+                    <div class="endpoint-url">wss://edge.auravos.io/stream</div>
+                    <p class="endpoint-desc">Live firehose data stream. Requires JWT Auth Bearer token.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center Panel: WebGL Holographic Server Stack -->
+        <section class="hologram-panel">
+            <div class="panel-header">
+                <h2>Edge Node Server Architecture</h2>
+                <div class="ping-readout">PING: <span id="ping-value">8</span>ms</div>
+            </div>
+            <div class="gl-wrapper" style="width:100%; height:calc(100% - 60px); position:relative;">
+                <canvas id="server-gl-canvas" style="width:100%; height:100%;"></canvas>
+            </div>
+        </section>
+
+        <!-- Right Panel: Live JSON Terminal Stream -->
+        <aside class="terminal-panel">
+            <header class="panel-header">
+                <h2>Live Event Stream (Firehose)</h2>
+                <div class="stream-controls">
+                    <button id="pause-stream">Pause</button>
+                    <button id="clear-stream">Clear</button>
+                </div>
+            </header>
+            <div class="terminal-window" id="terminal-output">
+                <!-- Data injected via JS -->
+            </div>
+        </aside>
+
+    </main>
+
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

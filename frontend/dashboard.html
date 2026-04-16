@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Operator Dashboard Mockup</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+</head>
+<body class="dashboard-body">
+
+    <!-- Subtle Orbs for Dashboard -->
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb orange"></div> <!-- Replaced violent with Neon Orange for ambiance -->
+    </div>
+
+    <!-- Layout Container -->
+    <div class="dashboard-layout">
+        
+        <!-- Fixed Sidebar (Strict 250px Layout) -->
+        <aside class="dash-sidebar">
+            <div class="sidebar-logo">
+                Aura<span>VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="active"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html"><span class="icon">◎</span> Heatmaps</a>
+                <a href="case-studies.html"><span class="icon">▤</span> Case Studies</a>
+                <a href="node-telemetry.html"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <!-- Fluid Main Content Area (flex: 1) -->
+        <main class="dash-main">
+            <!-- Header -->
+            <header class="dash-topbar">
+                <div class="topbar-info">
+                    <h2>Command Center</h2>
+                    <span class="live-badge"><span class="pulse-dot"></span> LIVE • E2EE Encrypted</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="connection-status">
+                        <span class="status-icon">🛡️</span> SECURE (AES-256)
+                    </div>
+                </div>
+            </header>
+
+            <!-- Rigid Grid / Bento Layout -->
+            <div class="dash-grid">
+                
+                <div class="widget capacity-widget">
+                    <div class="widget-header">System Capacity</div>
+                    <div class="widget-body">
+                        <div class="huge-number">84<span class="symbol">%</span></div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 84%;"></div>
+                        </div>
+                        <div class="widget-footer">Stable at 14,204 active nodes</div>
+                    </div>
+                </div>
+
+                <div class="widget alert-widget">
+                    <div class="widget-header">Predictive Alerts</div>
+                    <div class="widget-body">
+                        <ul class="alert-list">
+                            <li class="alert-item warning">
+                                <span class="alert-icon">⚠️</span>
+                                <div class="alert-text">
+                                    <strong>Gate 3 Bottleneck Predicted</strong>
+                                    <span>In 15m based on current trajectory</span>
+                                </div>
+                            </li>
+                            <li class="alert-item clear">
+                                <span class="alert-icon">✓</span>
+                                <div class="alert-text">
+                                    <strong>Sector 7 Flow Optimal</strong>
+                                    <span>Density decreased by 12%</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="widget latency-widget">
+                    <div class="widget-header">Edge Latency (ms)</div>
+                    <div class="widget-body">
+                        <div class="latency-graph" id="latencyTicker">
+                            <!-- JS handles ticker -->
+                        </div>
+                        <div class="widget-footer">Avg Response: <span class="accent-cyan">12ms</span></div>
+                    </div>
+                </div>
+
+                <!-- Embedded Map strict constraint within grid -->
+                <div class="widget map-widget">
+                    <div class="widget-header">Venue Spatial Map</div>
+                    <div class="map-container">
+                        <div class="map-grid-overlay"></div>
+                        
+                        <svg class="venue-map" viewBox="0 0 800 500">
+                            <!-- Outer Shell -->
+                            <path d="M 100 100 C 400 0, 700 100, 700 400 C 400 500, 100 400, 100 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+                            <!-- Inner Shell -->
+                            <path d="M 200 200 C 400 100, 600 200, 600 300 C 400 400, 200 300, 200 200" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                            
+                            <!-- Heatmap Nodes -->
+                            <!-- Congested Area (Neon Orange emphasis) -->
+                            <circle cx="550" cy="150" r="60" fill="url(#heatGradientOrange)" class="pulsing-heat"/>
+                            
+                            <!-- Active Areas -->
+                            <circle cx="250" cy="250" r="40" fill="url(#heatGradientCyan)" class="pulsing-heat delay-1"/>
+                            <circle cx="400" cy="350" r="50" fill="url(#heatGradientViolet)" class="pulsing-heat delay-2"/>
+
+                            <!-- Simulated Data Points -->
+                            <g class="data-stream">
+                                <circle cx="300" cy="200" r="2" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></circle>
+                                <circle cx="320" cy="210" r="2" fill="#fff"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/></circle>
+                            </g>
+
+                            <defs>
+                                <radialGradient id="heatGradientOrange">
+                                    <stop offset="0%" stop-color="var(--accent-orange)" stop-opacity="0.6" />
+                                    <stop offset="100%" stop-color="var(--accent-orange)" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient id="heatGradientCyan">
+                                    <stop offset="0%" stop-color="var(--accent-cyan)" stop-opacity="0.5" />
+                                    <stop offset="100%" stop-color="var(--accent-cyan)" stop-opacity="0" />
+                                </radialGradient>
+                                <radialGradient id="heatGradientViolet">
+                                    <stop offset="0%" stop-color="var(--accent-violet)" stop-opacity="0.5" />
+                                    <stop offset="100%" stop-color="var(--accent-violet)" stop-opacity="0" />
+                                </radialGradient>
+                            </defs>
+                        </svg>
+
+                        <!-- Floating HUD Overlay -->
+                        <div class="map-hud">
+                            <div class="hud-item title">Sector Alpha</div>
+                            <div class="hud-item detail">E2EE Tunnel: Active</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Override for global styling not needed here -->
+    <style>
+        .glass-nav-container { display: none !important; }
+        .global-footer { display: none !important; }
+    </style>
+
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

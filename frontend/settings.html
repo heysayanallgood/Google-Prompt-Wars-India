@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | System Settings</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <style>
+        .cyberpunk-theme { border-color: rgba(255, 94, 0, 0.4); }
+        .cyberpunk-header h2 { color: var(--accent-orange); text-shadow: 0 0 10px rgba(255, 94, 0, 0.5); }
+        .gl-container { 
+            flex: 1; min-height: 600px; position: relative; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255, 94, 0, 0.3); background: rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 50px rgba(255, 94, 0, 0.05);
+        }
+        /* Cyberpunk Scanlines */
+        .gl-container::after {
+            content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 150, 0, 0.03) 51%);
+            background-size: 100% 4px;
+        }
+        .gl-canvas { width: 100% !important; height: 100% !important; display: block; outline: none; cursor: grab; }
+        .gl-canvas:active { cursor: grabbing; }
+        .glass-nav-container, .global-footer { display: none !important; }
+
+        /* Advanced HUD Styling */
+        .advanced-hud {
+            position: absolute; pointer-events: none; font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-secondary); z-index: 20; display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .hud-top-right { top: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-bottom-right { bottom: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-top-left { top: 2rem; left: 2rem; align-items: flex-start; }
+        
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.7); border: 1px solid rgba(255, 150, 0, 0.4);
+            padding: 1rem; border-radius: 8px; backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 150, 0, 0.1); width: 220px;
+        }
+        .hud-panel-title { color: #ffb347; font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,150,0,0.2); padding-bottom: 0.25rem; }
+        
+        /* Metric rows */
+        .metric-row { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.75rem; }
+        .metric-val { color: var(--text-primary); font-weight: bold; }
+        
+        /* Interactive Input Mocks */
+        .mock-input {
+            width: 100%; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,150,0,0.3);
+            color: var(--text-primary); padding: 0.25rem 0.5rem; font-family: var(--font-mono);
+            font-size: 0.7rem; margin-top: 0.25rem; border-radius: 4px;
+        }
+
+        /* Access Log */
+        .access-item { font-size: 0.65rem; margin-bottom: 0.3rem; border-left: 2px solid #ffb347; padding-left: 0.5rem; }
+        .access-item span { color: #ffb347; }
+
+    </style>
+</head>
+<body class="dashboard-body">
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb orange" style="width:60vw; height:60vw; top:10%; left:20%; filter:blur(150px); opacity:0.15"></div>
+    </div>
+
+    <div class="dashboard-layout">
+        <!-- Fixed Sidebar -->
+        <aside class="dash-sidebar" style="border-right-color: rgba(255, 94, 0, 0.3);">
+            <div class="sidebar-logo">
+                Aura<span style="color:var(--accent-orange)">VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html"><span class="icon">◎</span> Heatmaps</a>
+                <a href="node-telemetry.html"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html" class="active" style="color:var(--accent-orange); background:rgba(255,94,0,0.1); border-color:rgba(255,94,0,0.3); box-shadow:0 0 15px rgba(255,94,0,0.15);"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <main class="dash-main cyberpunk-theme">
+            <header class="dash-topbar cyberpunk-header">
+                <div class="topbar-info">
+                    <h2>Core Configuration</h2>
+                    <span class="live-badge" style="border-color:var(--accent-orange); color:var(--accent-orange); background:rgba(255,94,0,0.05);"><span class="pulse-dot" style="background:var(--accent-orange)"></span> ADMIN AUTH</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="connection-status" style="color:var(--accent-orange); border-color:rgba(255,94,0,0.3);">
+                        <span class="status-icon">⚙</span> VAULT LOCKED
+                    </div>
+                </div>
+            </header>
+
+            <div class="gl-container">
+                <canvas id="settings-gl-canvas" class="gl-canvas"></canvas>
+                
+                <!-- Advanced HUD -->
+                <div class="advanced-hud hud-top-left">
+                    <div class="map-hud" style="border-color:rgba(255,150,0,0.4); background:rgba(10,5,0,0.8); position: relative; top: 0; left: 0;">
+                        <div class="hud-item title" style="color:#ffb347;">Encryptor Core Vault</div>
+                        <div class="hud-item detail" style="color:var(--text-primary);">Status: <span style="color:#4ade80;">LOCKED & SYNCED</span></div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-top-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Access Control</div>
+                        <div class="metric-row"><span>Admin Privileges</span><span class="metric-val" style="color:#4ade80">GRANTED</span></div>
+                        <div class="metric-row"><span>Auth Protocol</span><span class="metric-val">Biometric/2FA</span></div>
+                        <div style="margin-top: 0.5rem">
+                            <span style="font-size: 0.65rem; color: var(--text-muted)">Current Root Key:</span>
+                            <div class="mock-input">0x8A7B...4F9E</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-bottom-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Handshake Log</div>
+                        <div id="access-log" style="height: 100px; overflow: hidden; display: flex; flex-direction: column-reverse;">
+                            <div class="access-item"><span>[AUTH]</span> Initializing Keystore...</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Geometric Vault Overlay -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0.4; z-index: 10;">
+                    <svg width="450" height="450" viewBox="0 0 450 450" stroke="#ffb347" fill="none">
+                        <!-- Hexagonal border -->
+                        <polygon points="225,10 425,110 425,340 225,440 25,340 25,110" stroke-width="1" opacity="0.3" stroke-dasharray="10 5"/>
+                        <!-- Inner reticle -->
+                        <circle cx="225" cy="225" r="150" stroke-width="0.5" stroke-dasharray="1 3"/>
+                        <!-- Cardinal guides -->
+                        <path d="M225 30 v40 M225 420 v-40 M30 225 h40 M420 225 h-40" stroke-width="1.5" opacity="0.8"/>
+                    </svg>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const logTerm = document.getElementById('access-log');
+            const logs = [
+                "Verifying RSA Signatures...",
+                "Key Rotation Triggered.",
+                "Syncing Distributed Ledger...",
+                "SHA-256 Checksum: MATCH",
+                "Establishing secure E2E comms.",
+                "Validating Auth Tokens..."
+            ];
+            setInterval(() => {
+                const msg = document.createElement('div');
+                msg.className = 'access-item';
+                msg.innerHTML = `<span>[sys]</span> ${logs[Math.floor(Math.random() * logs.length)]}`;
+                logTerm.prepend(msg);
+                if(logTerm.children.length > 4) logTerm.lastChild.remove();
+            }, 3000);
+        });
+    </script>
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

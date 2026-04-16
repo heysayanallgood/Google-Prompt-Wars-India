@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Live Heatmaps</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/dashboard.css">
+    
+    <style>
+        /* Cyberpunk Theme Overrides */
+        .cyberpunk-theme { border-color: rgba(255, 94, 0, 0.4); }
+        .cyberpunk-header h2 { color: var(--accent-orange); text-shadow: 0 0 10px rgba(255, 94, 0, 0.5); }
+        .gl-container { 
+            flex: 1; min-height: 600px; position: relative; border-radius: 16px; overflow: hidden;
+            border: 1px solid rgba(255, 94, 0, 0.3); background: rgba(0,0,0,0.8);
+            box-shadow: inset 0 0 50px rgba(255, 94, 0, 0.05);
+        }
+        /* Cyberpunk Scanlines Over the container */
+        .gl-container::before {
+            content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 10;
+            background: linear-gradient(to bottom, transparent 50%, rgba(255, 94, 0, 0.02) 51%);
+            background-size: 100% 4px;
+        }
+        .gl-canvas { width: 100% !important; height: 100% !important; display: block; outline: none; cursor: crosshair; }
+        
+        /* Advanced HUD Styling */
+        .advanced-hud {
+            position: absolute; pointer-events: none; font-family: var(--font-mono); font-size: 0.8rem;
+            color: var(--text-secondary); z-index: 20; display: flex; flex-direction: column; gap: 0.5rem;
+        }
+        .hud-top-right { top: 2rem; right: 2rem; align-items: flex-end; }
+        .hud-bottom-right { bottom: 2rem; right: 2rem; align-items: flex-end; }
+        
+        .hud-panel {
+            background: rgba(0, 0, 0, 0.6); border: 1px solid rgba(255, 94, 0, 0.4);
+            padding: 1rem; border-radius: 8px; backdrop-filter: blur(8px);
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.1);
+        }
+        .hud-panel-title { color: var(--accent-orange); font-weight: 700; margin-bottom: 0.5rem; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.1em; border-bottom: 1px solid rgba(255,94,0,0.2); padding-bottom: 0.25rem; }
+        
+        /* Heat Scale Legend */
+        .heat-scale { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; }
+        .gradient-bar { width: 100px; height: 8px; background: linear-gradient(to right, #4d0000, #b32d00, #ff8c00, #ffffb3); border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); }
+        .scale-labels { display: flex; justify-content: space-between; width: 100px; font-size: 0.6rem; margin-top: 0.2rem; }
+
+        .glass-nav-container, .global-footer { display: none !important; }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <!-- Intense Orange Core Orbs -->
+    <div class="global-bg-fx dashboard-fx">
+        <div class="glow-orb orange" style="width:60vw; height:60vw; top:10%; left:20%; filter:blur(150px); opacity:0.15"></div>
+    </div>
+
+    <!-- Layout Container -->
+    <div class="dashboard-layout">
+        
+        <!-- Fixed Sidebar -->
+        <aside class="dash-sidebar" style="border-right-color: rgba(255, 94, 0, 0.3);">
+            <div class="sidebar-logo">
+                Aura<span style="color:var(--accent-orange)">VOS</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="dashboard.html"><span class="icon">⊞</span> Overview</a>
+                <a href="organizer-panel.html"><span class="icon">🛂</span> Mission Control</a>
+                <a href="heatmaps.html" class="active" style="color:var(--accent-orange); background:rgba(255,94,0,0.1); border-color:rgba(255,94,0,0.3); box-shadow:0 0 15px rgba(255,94,0,0.15);"><span class="icon">◎</span> Heatmaps</a>
+                <a href="node-telemetry.html"><span class="icon">▤</span> Node Telemetry</a>
+                <a href="alerts.html"><span class="icon">⚡</span> Alerts</a>
+                <a href="settings.html"><span class="icon">⚙</span> Settings</a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <a href="index.html" class="exit-app">← Exit Dashboard</a>
+            </div>
+        </aside>
+
+        <!-- Fluid Main Content Area -->
+        <main class="dash-main cyberpunk-theme">
+            <!-- Header -->
+            <header class="dash-topbar cyberpunk-header">
+                <div class="topbar-info">
+                    <h2>Live Thermal Topology</h2>
+                    <span class="live-badge" style="border-color:var(--accent-orange); color:var(--accent-orange); background:rgba(255,94,0,0.05);"><span class="pulse-dot" style="background:var(--accent-orange)"></span> SECTOR SCAN ACTIVE</span>
+                </div>
+                <div class="topbar-actions">
+                    <div class="connection-status" style="color:var(--accent-orange); border-color:rgba(255,94,0,0.3);">
+                        <span class="status-icon">◎</span> SENSOR GRID OK
+                    </div>
+                </div>
+            </header>
+
+            <!-- 3D WebGL Canvas Container -->
+            <div class="gl-container">
+                <canvas id="heatmap-gl-canvas" class="gl-canvas"></canvas>
+                
+                <!-- Existing Map HUD -->
+                <div class="map-hud" style="border-color:rgba(255,94,0,0.3); background:rgba(0,0,0,0.6); z-index: 20;">
+                    <div class="hud-item title" style="color:var(--text-primary);">Thermal Output</div>
+                    <div class="hud-item detail" style="color:var(--accent-orange);">Max Peak: <span id="dynamic-peak">8,401</span> Nodes</div>
+                </div>
+
+                <!-- Expanded Advanced HUD Overlays -->
+                <div class="advanced-hud hud-top-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Telemetry Params</div>
+                        <div>Resolution: 60x60 Grid</div>
+                        <div>Update Freq: 12ms</div>
+                        <div>Distortion: Sine/Cos Sync</div>
+                    </div>
+                </div>
+
+                <div class="advanced-hud hud-bottom-right">
+                    <div class="hud-panel">
+                        <div class="hud-panel-title">Density Legend</div>
+                        <div class="heat-scale">
+                            <div>Low</div>
+                            <div class="gradient-bar"></div>
+                            <div>High</div>
+                        </div>
+                        <div class="scale-labels">
+                            <span>0 nodes</span>
+                            <span>Critical</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Crosshair overlay center target -->
+                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; opacity: 0.3; z-index: 10;">
+                    <svg width="40" height="40" viewBox="0 0 40 40" stroke="var(--accent-orange)" fill="none">
+                        <path d="M20 0 v15 M20 40 v-15 M0 20 h15 M40 20 h-15" stroke-width="1"/>
+                        <circle cx="20" cy="20" r="10" stroke-width="0.5" stroke-dasharray="2 2" />
+                        <circle cx="20" cy="20" r="2" fill="var(--accent-orange)" />
+                    </svg>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Script for Dynamic HUD update -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const peakElement = document.getElementById('dynamic-peak');
+            if(peakElement) {
+                setInterval(() => {
+                    const jitter = Math.floor(Math.random() * 50) - 25;
+                    peakElement.innerText = (8401 + jitter).toLocaleString();
+                }, 800);
+            }
+        });
+    </script>
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

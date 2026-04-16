@@ -1,0 +1,151 @@
+/* registry.css */
+
+.registry-body {
+    background: #050505;
+}
+
+.registry-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.registry-header h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.registry-header p {
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+    margin-top: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 40vh;
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 12px;
+    background: rgba(255,255,255,0.02);
+    font-family: var(--font-mono);
+    text-align: center;
+}
+.empty-state h2 { color: var(--accent-orange); letter-spacing: 1px; margin-bottom: 0.5rem; }
+.empty-state p { color: #888; font-size: 0.9rem; }
+
+/* Grid */
+.registry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ID Card */
+.id-card {
+    background: rgba(10, 10, 10, 0.9);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,240,255,0.05);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.id-card:hover {
+    transform: translateY(-5px);
+    border-color: #00F0FF;
+    box-shadow: 0 15px 40px rgba(0,240,255,0.1), inset 0 0 20px rgba(0,240,255,0.1);
+}
+
+/* Authentic Photo view */
+.card-visual {
+    width: 100%;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+}
+
+.card-visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Clean authentic image, just a slight contrast pop */
+    filter: contrast(1.1) brightness(1.1);
+}
+
+/* Overlay elements to make it look like an ID card format but photo is authentic */
+.target-box {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 150px; height: 180px;
+    border: 1px solid rgba(0,240,255,0.3);
+    pointer-events: none;
+}
+.target-box::before, .target-box::after {
+    content: ''; position: absolute; width: 10px; height: 10px; border: 2px solid var(--accent-cyan);
+}
+.target-box::before { top: -2px; left: -2px; border-right: none; border-bottom: none; }
+.target-box::after { bottom: -2px; right: -2px; border-left: none; border-top: none; }
+
+/* Subtle authentic scanline */
+.scanline {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.1) 50%, rgba(255,255,255,0));
+    background-size: 100% 4px;
+    pointer-events: none;
+    opacity: 0.1;
+}
+
+/* Data Section */
+.card-data {
+    padding: 1.5rem;
+    font-family: var(--font-mono);
+}
+
+.subject-name {
+    font-size: 1.3rem; margin: 0 0 1rem 0; color: #fff;
+    text-transform: uppercase; letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 0.5rem;
+}
+
+.data-row {
+    display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.8rem;
+}
+
+.data-row .label { color: #666; }
+.data-row .val { font-weight: bold; }
+.data-row .val.green { color: #00ffaa; }
+.data-row .val.cyan { color: var(--accent-cyan); }
+.data-row .val.muted { color: #888; font-size: 0.7rem; }
+
+/* Watermark */
+.watermark {
+    position: absolute;
+    bottom: -10%; right: -5%;
+    font-size: 4rem; font-weight: 800; color: rgba(255,255,255,0.02);
+    transform: rotate(-10deg);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Animation */
+.fly-in {
+    animation: flyIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+}
+
+@keyframes flyIn {
+    0% { opacity: 0; transform: translateY(30px) scale(0.9); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
