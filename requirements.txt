@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+slowapi
+motor
+python-dotenv
+PyJWT
+passlib[bcrypt]
+aiofiles

@@ -1,0 +1,7 @@
+backend/venv/
+backend/__pycache__/
+.git/
+.env
+.devcontainer/
+node_modules/
+*.md
