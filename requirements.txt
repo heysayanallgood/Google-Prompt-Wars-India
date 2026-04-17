@@ -6,3 +6,5 @@ python-dotenv
 PyJWT
 passlib[bcrypt]
 aiofiles
+email-validator
+pydantic[email]
