@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Response, Request, WebSocket
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+import os
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -27,19 +28,6 @@ async def add_security_headers(request: Request, call_next):
     response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
     return response
 
-# CORS Configuration
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @app.post("/api/v1/auth/register", status_code=status.HTTP_201_CREATED)
 @limiter.limit("5/minute")
@@ -244,3 +232,10 @@ async def websocket_social(websocket: WebSocket):
             await websocket.send_text(json.dumps(payload))
     except Exception as e:
         pass
+
+# Serve compiled frontend from dist directory
+frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
+if os.path.exists(frontend_path):
+    app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
+else:
+    print(f"Warning: Frontend dist path not found at {frontend_path}. Run 'npm run build' in frontend.")

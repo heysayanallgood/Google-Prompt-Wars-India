@@ -1,19 +1,28 @@
-# Run on Google Cloud Run
-FROM python:3.11-slim
+# Build the frontend
+FROM node:18-alpine AS frontend-builder
+WORKDIR /app/frontend
+# Copy package.json and install dependencies
+COPY frontend/package*.json ./
+RUN npm install
+# Copy the rest of the frontend source and build it
+COPY frontend/ ./
+RUN npm run build
 
-# Set working directory
+# Build the backend and final image
+FROM python:3.11-slim
 WORKDIR /app
 
-# Copy dependencies
+# Copy python dependencies
 COPY requirements.txt .
-
-# Install Python packages
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application source code (frontend and backend)
-COPY . .
+# Copy backend code
+COPY backend/ ./backend/
 
-# Cloud Run sets the PORT env variable; expose 8080 as a fallback
+# Copy the built frontend from previous stage
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+
+# Cloud Run sets the PORT env variable; expose 8080 as fallback
 EXPOSE 8080
 
 # Start FastAPI. We cd into backend directory so imports resolve properly
