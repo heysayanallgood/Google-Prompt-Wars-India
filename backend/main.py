@@ -1,6 +1,8 @@
 from fastapi import FastAPI, Depends, HTTPException, status, Response, Request, WebSocket
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import os
+from contextlib import asynccontextmanager
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -13,20 +15,63 @@ import random
 from datetime import timedelta
 
 limiter = Limiter(key_func=get_remote_address)
-app = FastAPI(title="AuraVOS Secure Backend")
+
+# --- DATABASE SEEDING LOGIC ---
+async def seed_database():
+    count = await contestants_collection.count_documents({})
+    if count == 0:
+        print("DEBUG: Database is empty. Seeding sample contestants...")
+        sample_contestants = [
+            {"name": "Aiden Pearce", "hash": "V-9X2J1K", "timestamp": "2026-04-10T14:22:00Z", "status": "Active"},
+            {"name": "Sombra 'Olivia'", "hash": "V-4F9A2B", "timestamp": "2026-04-11T09:15:00Z", "status": "Verified"},
+            {"name": "Case 'Flatline'", "hash": "V-1L0P9Q", "timestamp": "2026-04-12T18:45:00Z", "status": "Observer"}
+        ]
+        await contestants_collection.insert_many(sample_contestants)
+        print("DEBUG: Seeding complete.")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Run on startup
+    await seed_database()
+    yield
+    # Run on shutdown (if needed)
+
+app = FastAPI(title="AuraVOS Secure Backend", lifespan=lifespan)
+
+# --- ROBUST STATIC FILE SERVING ---
+# Check multiple paths for the 'dist' folder
+base_dir = os.path.dirname(os.path.abspath(__file__))
+potential_paths = [
+    os.path.join(base_dir, "..", "frontend", "dist"),      # Local/Standard
+    os.path.join(base_dir, "dist"),                        # Flattened
+    "/app/frontend/dist",                                  # Absolute Docker
+    "/app/dist"                                            # Alternative Docker
+]
+
+frontend_path = None
+for p in potential_paths:
+    if os.path.exists(p) and os.path.isdir(p):
+        frontend_path = p
+        break
+
+if frontend_path:
+    print(f"DEBUG: Static assets found at {frontend_path}")
+    # We'll serve the UI. Note: API routes defined below will take precedence
+    # because FastAPI matches specific routes before the catch-all mount.
+else:
+    print("DEBUG: No static assets found in any potential path.")
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# Custom Security Headers Middleware (Helmet equivalent)
-@app.middleware("http")
-async def add_security_headers(request: Request, call_next):
-    response = await call_next(request)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-    return response
+# CORS: Allow all in production/Cloud Run since we are same-origin
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.post("/api/v1/auth/register", status_code=status.HTTP_201_CREATED)
@@ -233,9 +278,6 @@ async def websocket_social(websocket: WebSocket):
     except Exception as e:
         pass
 
-# Serve compiled frontend from dist directory
-frontend_path = os.path.join(os.path.dirname(__file__), "..", "frontend", "dist")
-if os.path.exists(frontend_path):
+# Finally, mount the static files AFTER all API/WS routes are defined
+if frontend_path:
     app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
-else:
-    print(f"Warning: Frontend dist path not found at {frontend_path}. Run 'npm run build' in frontend.")
