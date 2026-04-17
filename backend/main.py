@@ -37,12 +37,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="AuraVOS Secure Backend", lifespan=lifespan)
 
-# --- STATIC FILE SERVING (ROOTED) ---
-base_dir = os.getcwd()
+# --- STATIC FILE SERVING (PATH-AGNOSTIC) ---
+# We are likely running from /app/backend or the project root
+cwd = os.getcwd()
 potential_paths = [
-    os.path.join(base_dir, "frontend"),
-    os.path.join(base_dir, "backend", "..", "frontend"),
-    "/app/frontend"
+    os.path.join(cwd, "..", "frontend"),  # If in backend/
+    os.path.join(cwd, "frontend"),         # If in root
+    "/app/frontend"                        # Absolute Docker
 ]
 
 frontend_path = None
