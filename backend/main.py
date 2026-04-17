@@ -34,18 +34,15 @@ async def lifespan(app: FastAPI):
     # Run on startup
     await seed_database()
     yield
-    # Run on shutdown (if needed)
 
 app = FastAPI(title="AuraVOS Secure Backend", lifespan=lifespan)
 
-# --- ROBUST STATIC FILE SERVING ---
-# Check multiple paths for the 'dist' folder
-base_dir = os.path.dirname(os.path.abspath(__file__))
+# --- STATIC FILE SERVING (ROOTED) ---
+base_dir = os.getcwd()
 potential_paths = [
-    os.path.join(base_dir, "..", "frontend", "dist"),      # Local/Standard
-    os.path.join(base_dir, "dist"),                        # Flattened
-    "/app/frontend/dist",                                  # Absolute Docker
-    "/app/dist"                                            # Alternative Docker
+    os.path.join(base_dir, "frontend"),
+    os.path.join(base_dir, "backend", "..", "frontend"),
+    "/app/frontend"
 ]
 
 frontend_path = None
@@ -55,16 +52,14 @@ for p in potential_paths:
         break
 
 if frontend_path:
-    print(f"DEBUG: Static assets found at {frontend_path}")
-    # We'll serve the UI. Note: API routes defined below will take precedence
-    # because FastAPI matches specific routes before the catch-all mount.
+    print(f"DEBUG: Serving frontend from {frontend_path}")
 else:
-    print("DEBUG: No static assets found in any potential path.")
+    print("DEBUG: Global frontend folder not found.")
 
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-# CORS: Allow all in production/Cloud Run since we are same-origin
+# CORS: Allow all for simple same-origin/cross-origin compatibility
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -121,6 +116,16 @@ async def logout(response: Response):
 async def create_contestant(contestant: ContestantCreate):
     await contestants_collection.insert_one(contestant.model_dump())
     return {"message": "Contestant logged to secure vault"}
+
+@app.get("/api/v1/contestants")
+async def get_contestants():
+    # Fetch all contestants from DB
+    cursor = contestants_collection.find({})
+    contestants = await cursor.to_list(length=100)
+    # Remove MongoDB _id for JSON serialization
+    for c in contestants:
+        c["id"] = str(c.pop("_id"))
+    return contestants
 
 @app.websocket("/api/v1/ws/telemetry")
 async def websocket_telemetry(websocket: WebSocket):

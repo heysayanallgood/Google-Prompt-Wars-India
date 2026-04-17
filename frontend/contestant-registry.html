@@ -55,29 +55,48 @@
     </main>
     <script src="./assets/js/main.js" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const grid = document.getElementById('registry-grid');
             const emptyState = document.getElementById('empty-state');
             
-            const db = JSON.parse(localStorage.getItem('aura_contestants') || '[]');
+            let contestants = [];
             
-            if(db.length === 0) {
+            // Try fetching from Live API
+            try {
+                const response = await fetch('/api/v1/contestants');
+                if (response.ok) {
+                    contestants = await response.json();
+                }
+            } catch (e) {
+                console.warn("API Offline, falling back to local storage.");
+            }
+            
+            // Append local storage items for offline-first experience
+            const localDb = JSON.parse(localStorage.getItem('aura_contestants') || '[]');
+            localDb.forEach(item => {
+                // Avoid duplication by checking hash
+                if (!contestants.some(c => c.hash === item.hash)) {
+                    contestants.push(item);
+                }
+            });
+            
+            if (contestants.length === 0) {
                 emptyState.style.display = 'flex';
                 grid.style.display = 'none';
                 return;
             }
 
-            db.reverse().forEach(entry => {
+            // Render
+            contestants.reverse().forEach(entry => {
                 const card = document.createElement('div');
                 card.className = 'id-card fly-in';
                 
-                // Format time string
                 const d = new Date(entry.timestamp);
                 const timeStr = d.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) + ' | ' + d.toLocaleDateString();
 
                 card.innerHTML = `
                     <div class="card-visual">
-                        <img src="${entry.image}" alt="Subject Facial Scan">
+                        <img src="${entry.image || './assets/img/avatar-placeholder.png'}" alt="Subject Facial Scan" onerror="this.src='./assets/img/avatar-placeholder.png'">
                         <div class="scanline"></div>
                         <div class="target-box"></div>
                     </div>
@@ -85,7 +104,7 @@
                         <h3 class="subject-name">${entry.name}</h3>
                         <div class="data-row">
                             <span class="label">CLR:</span>
-                            <span class="val green">LEVEL-X VIP</span>
+                            <span class="val green">${entry.status || 'LEVEL-X VIP'}</span>
                         </div>
                         <div class="data-row">
                             <span class="label">ZKP:</span>
