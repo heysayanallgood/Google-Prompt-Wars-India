@@ -1,0 +1,73 @@
+/* animations.css */
+
+@keyframes floatOrb {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(5%, 10%) scale(1.1);
+    }
+    100% {
+        transform: translate(-5%, -5%) scale(0.9);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulseRing {
+    0% { transform: scale(0.8); opacity: 0.5; }
+    100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes rotateWireframe {
+    0% { transform: rotateY(0deg) rotateX(10deg); }
+    100% { transform: rotateY(360deg) rotateX(10deg); }
+}
+
+@keyframes slideUpFade {
+    0% { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes dashLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes ghostQueuePath {
+    0% { offset-distance: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+}
+
+@keyframes morphPadlock {
+    0% {
+        border-radius: 12px 12px 0 0;
+        height: 30px;
+        transform: translateY(0);
+    }
+    50% {
+        border-radius: 50%;
+        height: 60px;
+        transform: translateY(10px);
+    }
+    100% {
+        border-radius: 12px;
+        height: 40px;
+        transform: translateY(0);
+        background: var(--accent-cyan);
+        box-shadow: 0 0 20px var(--accent-cyan);
+    }
+}
+
+@keyframes blinkDot {
+    0% { opacity: 0.2; }
+    50% { opacity: 1; box-shadow: 0 0 10px currentColor; }
+    100% { opacity: 0.2; }
+}

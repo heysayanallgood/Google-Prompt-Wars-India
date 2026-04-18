@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Digital Twin Stadium Map</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/stadium-map.css">
+</head>
+<body class="map-body">
+
+    <!-- Global Nav -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>VOS</span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="technology.html">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html" class="active">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html">Case Studies</a>
+                <a href="backend-console.html">Developer API</a>
+                <a href="biometric-scan.html">Biometric Kiosk</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta" style="background: transparent;">Login</a>
+            </div>
+        </nav>
+    </div>
+
+    <main class="map-container">
+        <!-- 3D Canvas -->
+        <canvas id="stadium-gl-canvas"></canvas>
+
+        <!-- UI HUD Overlay -->
+        <div class="map-hud">
+            
+            <!-- Left Sidebar Controls -->
+            <div class="control-panel left-panel fly-in">
+                <h2>Navigation Console</h2>
+                
+                <div class="control-group">
+                    <label>Perspective Mode</label>
+                    <div class="toggle-container">
+                        <button id="btn-2d" class="toggle-btn active">2D TOP-DOWN</button>
+                        <button id="btn-3d" class="toggle-btn">3D TWIN</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>A.I. Pathfinding</label>
+                    <button id="btn-avoid-crowd" class="sys-btn avoid-crowd-btn">
+                        <span class="icon">⚡</span> Avoid Crowd Mode (OFF)
+                    </button>
+                    <div id="path-stats" class="path-stats" style="display: none;">
+                        <div>EST: <span id="est-time" class="cyan-text">--</span> mins</div>
+                        <div>VIA: <span id="route-type" class="orange-text">Calculated</span></div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Find Nearest</label>
+                    <div class="facility-grid">
+                        <button class="fac-btn" data-target="r1">🚻 Restroom</button>
+                        <button class="fac-btn" data-target="f1">🍔 Food Stall</button>
+                        <button class="fac-btn" data-target="g1">🚪 Exit Gate</button>
+                        <button class="fac-btn" data-target="m1">🏥 Medical</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar Analytics -->
+            <div class="control-panel right-panel fly-in" style="animation-delay: 0.2s;">
+                <h2>Telemetry Feed</h2>
+                
+                <div class="live-event-ticker" id="event-ticker">
+                    <div class="ticker-label">LIVE ALERT</div>
+                    <div class="ticker-msg">SYNCING WITH AURA.NET...</div>
+                </div>
+
+                <h3 class="sub-heading">Facility Queues</h3>
+                <ul class="queue-list" id="queue-list">
+                    <li><span>🍔 Food-1:</span> <span id="q-f1" class="cyan-text">--</span></li>
+                    <li><span>🍔 Food-2:</span> <span id="q-f2" class="cyan-text">--</span></li>
+                    <li><span>🚻 Restroom-1:</span> <span id="q-r1" class="cyan-text">--</span></li>
+                    <li><span>🚻 Restroom-2:</span> <span id="q-r2" class="cyan-text">--</span></li>
+                </ul>
+
+                <div class="legend">
+                    <h3 class="sub-heading">Heatmap Legend</h3>
+                    <div class="leg-item"><div class="dot green"></div> Low Congestion</div>
+                    <div class="leg-item"><div class="dot yellow"></div> Moderate</div>
+                    <div class="leg-item"><div class="dot red"></div> High Crowd / Blockage</div>
+                </div>
+            </div>
+
+            <!-- Start Position Selector (Mocking current location) -->
+            <div class="location-selector fly-in" style="animation-delay: 0.4s;">
+                <label>Current Location (Mock GPS):</label>
+                <select id="start-node">
+                    <option value="n1">Concourse North</option>
+                    <option value="n3">Concourse East</option>
+                    <option value="n5">Concourse South</option>
+                    <option value="n7">Concourse West</option>
+                    <option value="g1">Gate North</option>
+                </select>
+                <button id="btn-clear-path" class="sys-btn small" style="margin-top: 10px; width: 100%;">Clear Path</button>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- Base Scripts -->
+    <!-- We skip main.js here to dedicate three.js logic solely to stadium-map.js, but keep cursor if needed -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="./assets/js/main.js" defer></script>
+    <script src="./assets/js/stadium-map.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+/* login.css - AuraVOS Authentication Aesthetics */
+
+.auth-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding-top: 100px; /* Space for fixed nav */
+    padding-bottom: 50px;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 480px;
+    z-index: 10;
+}
+
+.auth-card {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Softer base border */
+    border-radius: 24px;
+    padding: 2.5rem;
+    box-shadow: var(--glass-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    position: relative;
+    animation: floatingCard 6s ease-in-out infinite;
+}
+
+/* Floating effect for the auth card */
+@keyframes floatingCard {
+    0%, 100% { transform: translateY(0); box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+    50% { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(0, 240, 255, 0.15); }
+}
+
+/* Glowing Dynamic Border */
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 24px;
+    padding: 2px;
+    background: linear-gradient(135deg, var(--accent-cyan) 0%, transparent 40%, transparent 60%, var(--accent-violet) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    z-index: 10;
+    background-size: 200% 200%;
+    animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* Auth Toggle */
+.auth-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 0.25rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.auth-toggle button {
+    flex: 1;
+    padding: 0.75rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    z-index: 1;
+    transition: color 0.3s ease;
+}
+
+.auth-toggle button.active {
+    color: var(--text-primary);
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.25rem;
+    width: calc(50% - 0.25rem);
+    height: calc(100% - 0.5rem);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.register-mode .toggle-slider {
+    transform: translateX(100%);
+}
+
+/* Forms */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.08);
+    border-color: transparent;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+    transform: translateY(-2px);
+}
+
+.input-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 2px; left: 2px; right: 2px; height: 2px;
+    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-violet), var(--accent-orange));
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-radius: 0 0 10px 10px;
+    pointer-events: none;
+}
+
+.input-wrapper:focus-within::after {
+    transform: scaleX(1);
+}
+
+/* Email Validation States */
+.input-wrapper input.invalid {
+    border-color: #ff4444;
+    box-shadow: 0 0 15px rgba(255, 68, 68, 0.2);
+}
+
+.input-wrapper input.valid {
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+/* Submit Button */
+.auth-submit {
+    margin-top: 0.5rem;
+}
+
+/* SSO Gateway */
+.sso-gateway {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.sso-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.sso-divider::before, .sso-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--glass-border);
+}
+
+.sso-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+}
+
+.sso-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.sso-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* SSO Specific Hover Brands */
+.google-btn:hover {
+    border-color: #4285F4;
+    box-shadow: 0 0 15px rgba(66, 133, 244, 0.3);
+    background: rgba(66, 133, 244, 0.1);
+}
+
+.github-btn:hover {
+    border-color: #ffffff;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.linkedin-btn:hover {
+    border-color: #0077b5;
+    box-shadow: 0 0 15px rgba(0, 119, 181, 0.3);
+    background: rgba(0, 119, 181, 0.1);
+}
+
+.yahoo-btn:hover {
+    border-color: #6001d2;
+    box-shadow: 0 0 15px rgba(96, 1, 210, 0.3);
+    background: rgba(96, 1, 210, 0.1);
+}
+
+/* Animations */
+.fade-in {
+    animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (max-width: 500px) {
+    .auth-card {
+        padding: 1.5rem;
+    }
+    .sso-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Case Studies</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Three.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/case-studies.css">
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="global-bg-fx">
+        <div class="glow-orb orange"></div>
+        <div class="glow-orb violet"></div>
+        <div class="glow-orb cyan"></div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>VOS</span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="technology.html">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html" class="active">Case Studies</a>
+                <a href="backend-console.html">Developer API</a>
+                <a href="biometric-scan.html">Biometric Kiosk</a>
+                <a href="contestant-registry.html">Contestant Registry</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta" style="background: transparent;">Login</a>
+                <button class="nav-cta">Request Demo</button>
+            </div>
+        </nav>
+    </div>
+
+    <main class="page-container cases-page">
+        <!-- Mass WebGL Header Area -->
+        <header class="globe-hero">
+            <div class="globe-text-overlay">
+                <h1 class="slide-up">Global Deployments.</h1>
+                <p class="slide-up-delay-1">AuraVOS secures the world's most dense physical spaces. Explore operational nodes across our global network.</p>
+                <div class="stat-ticker slide-up-delay-2">
+                    <div class="stat"><span class="label">Live Nodes</span><span class="value cyan">8,421</span></div>
+                    <div class="stat"><span class="label">Threats Mitigated</span><span class="value orange">1.2M+</span></div>
+                    <div class="stat"><span class="label">Uptime</span><span class="value violet">99.999%</span></div>
+                </div>
+            </div>
+            <div class="globe-canvas-wrapper" style="position: absolute; inset: 0; z-index: 0;">
+                <canvas id="globe-gl-canvas" style="width: 100%; height: 100%; outline: none; cursor: grab;"></canvas>
+            </div>
+        </header>
+
+        <!-- Bento Grid for Case Studies -->
+        <section class="cases-bento-grid">
+            
+            <!-- Study 1 -->
+            <div class="bento-card study-card">
+                <div class="bento-content">
+                    <div class="study-header">
+                        <div class="study-location">Wembley Stadium</div>
+                        <div class="badge green">Active</div>
+                    </div>
+                    <h3>Anti-Scalp Holographic Ticketing</h3>
+                    <p>Utilizing zero-knowledge proofs, we eliminated 100% of counterfeit tickets while ensuring attendee anonymity on the blockchain.</p>
+                </div>
+                <div class="study-visual">
+                    <div class="wireframe-ticket">
+                        <div class="barcode"></div>
+                        <div class="hologram-pulse"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study 2 -->
+            <div class="bento-card study-card">
+                <div class="bento-content">
+                    <div class="study-header">
+                        <div class="study-location">Tokyo Dome</div>
+                        <div class="badge blue">Ongoing</div>
+                    </div>
+                    <h3>Predictive Crowd Control AI</h3>
+                    <p>Dynamically rerouting 55,000 attendees simultaneously using Edge nodes to avoid structural bottlenecks and crush hazards.</p>
+                </div>
+                <div class="study-visual">
+                    <div class="crowd-flow-map">
+                        <svg viewBox="0 0 200 100" class="flow-svg">
+                            <path class="flow-line" d="M 10 50 Q 100 10 190 50" />
+                            <path class="flow-line" d="M 10 50 Q 100 90 190 50" />
+                            <circle class="flow-dot" cx="0" cy="0" r="3"><animateMotion dur="2s" repeatCount="indefinite" path="M 10 50 Q 100 10 190 50"/></circle>
+                            <circle class="flow-dot" cx="0" cy="0" r="3"><animateMotion dur="2.5s" repeatCount="indefinite" path="M 10 50 Q 100 90 190 50"/></circle>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Study 3 (Spans both columns) -->
+            <div class="bento-card study-card span-2">
+                <div class="bento-content horizon-layout">
+                    <div class="text-block">
+                        <div class="study-header">
+                            <div class="study-location">MetLife Latency Test</div>
+                            <div class="badge orange">Stress Test</div>
+                        </div>
+                        <h3>Ultra-Low Latency Mesh</h3>
+                        <p>AuraVOS successfully processed 120,000 biometrics requests per second via local mesh networks during a massive power failure, bypassing legacy cloud solutions entirely.</p>
+                        <button class="ghost-btn" style="margin-top: 1rem;">View Full Report</button>
+                    </div>
+                    <div class="visual-block">
+                        <!-- Simulated Terminal Output -->
+                        <div class="terminal-log">
+                            <div class="log-line">> Establishing mesh protocol...</div>
+                            <div class="log-line">> Mainline power grid: <span style="color:var(--accent-orange)">OFFLINE</span></div>
+                            <div class="log-line">> Aura Edge engaged.</div>
+                            <div class="log-line">> Syncing nodes [1024/1024] <span style="color:#0f0">OK</span></div>
+                            <div class="log-line">> Biometrics auth latency: 8ms</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="global-footer">
+        <div class="footer-cta">
+            <h2>Start your integration.</h2>
+            <button class="footer-btn">Read the Docs</button>
+        </div>
+        <div class="footer-links">
+            <a href="#">Whitepapers</a>
+            <a href="#">Research Hub</a>
+            <a href="#">Careers</a>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 AuraVOS Systems Inc.</span>
+            <div class="footer-legal">
+                <a href="#">Privacy Protocol</a>
+                <a href="#">Terms</a>
+                <a href="#">GitHub Repo</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>

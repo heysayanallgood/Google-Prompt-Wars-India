@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Social Hub</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/social.css">
+</head>
+<body class="social-body">
+
+    <!-- Ambient FX -->
+    <div class="global-bg-fx">
+        <div class="glow-orb cyan"></div>
+        <div class="glow-orb violet"></div>
+        <div class="glow-orb orange"></div>
+    </div>
+
+    <!-- Top Navigation -->
+    <div class="glass-nav-container">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>SOCIAL</span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html" class="active">Social Hub</a>
+            </div>
+            <div class="nav-actions" style="display:flex; align-items:center; gap:10px;">
+                <span class="pulse-dot green" style="background:#00F0FF;"></span>
+                <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--text-muted);">LOC: BROADCASTING</span>
+                <label class="switch">
+                    <input type="checkbox" id="privacy-toggle" checked>
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </nav>
+    </div>
+
+    <main class="page-container social-container">
+        
+        <!-- Top Half: Interactive SVG Map Layout -->
+        <section class="social-map-panel fade-in">
+            <div class="panel-header">
+                <h2>Stadium Live Map</h2>
+                <button id="find-friends-btn" class="sys-btn active-pulse">Find My Friends</button>
+            </div>
+            
+            <div class="interactive-map droppable-map" id="social-map">
+                <!-- Drop zones for visual reference -->
+                <div class="drop-zone" data-zone="North Gate" style="top: 5%; left: 45%; width: 10%; height: 10%;">North Gate</div>
+                <div class="drop-zone" data-zone="South Gate" style="bottom: 5%; left: 45%; width: 10%; height: 10%;">South Gate</div>
+                <div class="drop-zone" data-zone="Concourse A" style="top: 30%; left: 10%; width: 25%; height: 40%;">Concourse A</div>
+                <div class="drop-zone" data-zone="Concourse B" style="top: 30%; right: 10%; width: 25%; height: 40%;">Concourse B</div>
+                <div class="drop-zone" data-zone="Food Court 1" style="top: 5%; right: 10%; width: 20%; height: 15%;">Food Court 1</div>
+                
+                <!-- Polyline tracking route will be injected here -->
+                <svg id="route-svg" class="route-svg" w="100%" h="100%">
+                    <path id="route-path" d="" fill="none" stroke="var(--accent-cyan)" stroke-width="3" stroke-dasharray="10, 10" />
+                </svg>
+
+                <!-- Dynamic friend avatars will be injected here -->
+                <div id="avatars-layer"></div>
+                
+                <!-- P1 Player Profile (You) -->
+                <div class="avatar-marker you" id="avatar-you" style="top: 60%; left: 50%;">
+                    YOU
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Half: AI Meetup & Group Chat -->
+        <section class="social-comms-panel fade-in" style="animation-delay: 0.2s;">
+            
+            <div class="ai-suggestion-box glass-panel" id="ai-meetup-box">
+                <div class="ai-header">
+                    <span class="icon">✨</span> AI Meetup Suggestion
+                </div>
+                <div class="ai-body">
+                    <p id="ai-meetup-text">Analyzing crowd density and party spread...</p>
+                    <p id="ai-meetup-reasoning" style="color:var(--text-muted); font-size: 0.8rem; margin-top:0.5rem;"></p>
+                </div>
+                <div class="ai-actions">
+                    <button class="sys-btn" id="accept-meetup-btn">Set as Meetup Point</button>
+                </div>
+            </div>
+
+            <div class="chat-wrapper glass-panel">
+                <header class="chat-header">
+                    <h3>Group Chat (Squad 1 🔋)</h3>
+                </header>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-bubble system">
+                        Secure comms established. End-to-end encrypted.
+                    </div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-input" placeholder="Coordinate with your friends...">
+                    <button id="send-btn">SEND</button>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./assets/js/social.js" defer></script>
+</body>
+</html>

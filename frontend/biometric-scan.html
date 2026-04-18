@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraVOS | Biometric Fast-Lane Node</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="./assets/css/global.css">
+    <link rel="stylesheet" href="./assets/css/animations.css">
+    <link rel="stylesheet" href="./assets/css/biometric.css">
+</head>
+<body class="kiosk-mode">
+
+    <!-- Navigation Overlay -->
+    <div class="glass-nav-container kiosk-nav">
+        <nav class="glass-nav">
+            <div class="nav-logo">Aura<span>VOS</span></div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="technology.html">The Tech</a>
+                <a href="dashboard.html">Live Dashboard</a>
+                <a href="stadium-map.html">Stadium Map</a>
+                <a href="social-hub.html">Social Hub</a>
+                <a href="case-studies.html">Case Studies</a>
+                <a href="backend-console.html">Developer API</a>
+                <a href="biometric-scan.html" class="active">Biometric Kiosk</a>
+                <a href="contestant-registry.html">Contestant Registry</a>
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <a href="login.html" class="nav-cta" style="background: transparent;">Login</a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Kiosk Layout -->
+    <main class="kiosk-container">
+        <!-- Live Video Feed background -->
+        <div class="video-container">
+            <video id="webcam-feed" autoplay playsinline muted></video>
+            
+            <!-- Black screen overlay before camera access -->
+            <div id="camera-prompt" class="camera-prompt">
+                <div class="spinner"></div>
+                <h2>Initializing Optics...</h2>
+                <p>Please allow camera access to begin the local Zero-Knowledge authentication sequence.</p>
+                <button id="start-scan-btn" class="sys-btn" style="display:none; margin-top:2rem;">Override & Start</button>
+            </div>
+
+            <!-- The Cyberpunk Scanning HUD Overlay -->
+            <div class="scanner-hud" id="scanner-hud" style="display:none;">
+                
+                <!-- Crosshairs & Brackets -->
+                <div class="hud-bracket top-left"></div>
+                <div class="hud-bracket top-right"></div>
+                <div class="hud-bracket bottom-left"></div>
+                <div class="hud-bracket bottom-right"></div>
+
+                <div class="center-crosshair">
+                     <svg viewBox="0 0 100 100">
+                         <circle cx="50" cy="50" r="40" class="ch-circle" />
+                         <line x1="50" y1="0" x2="50" y2="100" class="ch-line" />
+                         <line x1="0" y1="50" x2="100" y2="50" class="ch-line" />
+                     </svg>
+                </div>
+
+                <!-- Animated Sweep Laser -->
+                <div class="laser-sweep" id="laser-sweep"></div>
+                
+                <!-- Radar Dots representing AI topological plotting -->
+                <div class="topo-dots" id="topo-dots"></div>
+
+                <!-- Status Console Text -->
+                <div class="hud-console">
+                    <div class="console-header">AuraVOS Edge Engine v4.2</div>
+                    <div id="hud-status-text" class="status-msg">AWAITING SUBJECT</div>
+                    <div class="telemetry">
+                        <div>ZKP: <span id="zk-hash">00000000</span></div>
+                        <div>LTCY: <span id="ltcy-ping">--</span>ms</div>
+                    </div>
+                </div>
+
+                <!-- Final Verification Badge -->
+                <div class="verification-badge" id="verification-badge">
+                    <h1 class="flash-text">ACCESS GRANTED</h1>
+                    <div class="auth-details">
+                        <p>Subject: <span id="temp-subject-id">VIP-ALPHA-9</span></p>
+                        <p>Zone Clearance: ALL ACCESS</p>
+                        <p>Ticket: VALIDATED</p>
+                    </div>
+                </div>
+
+            </div>
+            
+            <!-- Hidden Canvas for taking snapshots -->
+            <canvas id="snapshot-canvas" style="display:none;"></canvas>
+
+            <!-- Post-Scan Username Prompt -->
+            <div id="username-prompt-overlay" class="prompt-overlay" style="display: none;">
+                <div class="prompt-box">
+                    <h2>IDENTIFICATION REQUIRED</h2>
+                    <p>Biometric signature captured. Please enter your alias to finalize registry entry.</p>
+                    <input type="text" id="username-input" placeholder="Enter Contestant Name" autocomplete="off" />
+                    <button id="submit-registry-btn" class="sys-btn mt-2">Submit to Local Registry</button>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="kiosk-footer">
+            <p>Ensure face is clearly visible. This node securely logs authentic images locally.</p>
+            <button id="re-scan-btn" class="nav-cta" style="display:none;">Run Sequence Again</button>
+        </div>
+    </main>
+
+    <script src="./assets/js/main.js" defer></script>
+</body>
+</html>
